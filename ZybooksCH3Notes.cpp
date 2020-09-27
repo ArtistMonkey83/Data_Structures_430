@@ -46,14 +46,18 @@ ListAppend(list, newNode) {
     list⇢length++
 }
 
-ListAppend(list, newNode) {
+ListInsertAfter(list, curNode, newNode) {
    if (list⇢head == null) { // List empty
       list⇢head = newNode
       list⇢tail = newNode
    }
-   else{
+   else if (curNode == list⇢tail) { // Insert after tail
       list⇢tail⇢next = newNode
       list⇢tail = newNode
+   }
+   else {
+      newNode⇢next = curNode⇢next
+      curNode⇢next = newNode
    }
 }
 
@@ -336,14 +340,14 @@ _____                          _
 |_____/ \___|\__, |\__,_|\___| /_/    \_\_____/  |_|
                 | |
                 |_|
-                _                        _   _ _     _
-/\                          | |                      | | | (_)   | |
-/  \   _ __ _ __ __ _ _   _  | |__   __ _ ___  ___  __| | | |_ ___| |_ ___
-/ /\ \ | '__| '__/ _` | | | | | '_ \ / _` / __|/ _ \/ _` | | | / __| __/ __|
-/ ____ \| |  | | | (_| | |_| | | |_) | (_| \__ \  __/ (_| | | | \__ \ |_\__ \
+                                 _                        _   _ _     _
+    /\                          | |                      | | | (_)   | |
+   /  \   _ __ _ __ __ _ _   _  | |__   __ _ ___  ___  __| | | |_ ___| |_ ___
+  / /\ \ | '__| '__/ _` | | | | | '_ \ / _` / __|/ _ \/ _` | | | / __| __/ __|
+ / ____ \| |  | | | (_| | |_| | | |_) | (_| \__ \  __/ (_| | | | \__ \ |_\__ \
 /_/    \_\_|  |_|  \__,_|\__, | |_.__/ \__,_|___/\___|\__,_| |_|_|___/\__|___/
-         __/ |
-        |___/
+                         __/ |
+                        |___/
 ArrayAppend(array, newItem) {
     currentSize = array⇢length
     Increase array size by one
