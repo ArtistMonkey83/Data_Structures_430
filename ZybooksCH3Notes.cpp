@@ -1,3 +1,30 @@
+
+FindMax(inputArray) {
+   max = inputArray[0]
+
+   for (i = 1; i < inputArray.size; ++i) {
+      if (inputArray[i] > max) {
+         max = inputArray[i]
+      }
+   }
+
+   return max
+}
+
+
+FOR BIG O
+If f(N) is a sum of several terms, the highest order term
+is kept and others are discarded.
+= O(
+2
+7·N
+Rule 1:
+)
+Rule 2:
+If f(N) has a term that is a product of several factors,
+all constants are omitted.
+
+
   _____ _             _                  _      _       _            _   _      _     _
  / ____(_)           | |                | |    (_)     | |          | | | |    (_)   | |
 | (___  _ _ __   __ _| |_   _   ______  | |     _ _ __ | | _____  __| | | |     _ ___| |_ ___
@@ -6,6 +33,30 @@
 |_____/|_|_| |_|\__, |_|\__, |          |______|_|_| |_|_|\_\___|\__,_| |______|_|___/\__|___/
                  __/ |   __/ |
                 |___/   |___/
+
+ListAppend(list, newNode) {
+    if (list⇢head == null) { // List empty
+      list⇢head = newNode
+      list⇢tail = newNode
+    }
+    else{
+      list⇢tail⇢next = newNode
+      list⇢tail = newNode
+    }
+    list⇢length++
+}
+
+ListAppend(list, newNode) {
+   if (list⇢head == null) { // List empty
+      list⇢head = newNode
+      list⇢tail = newNode
+   }
+   else{
+      list⇢tail⇢next = newNode
+      list⇢tail = newNode
+   }
+}
+
 
 ListRemoveAfter(list,curNode){
   //Special case, remove head node
@@ -292,4 +343,57 @@ _____                          _
 / ____ \| |  | | | (_| | |_| | | |_) | (_| \__ \  __/ (_| | | | \__ \ |_\__ \
 /_/    \_\_|  |_|  \__,_|\__, | |_.__/ \__,_|___/\___|\__,_| |_|_|___/\__|___/
          __/ |
-        |___/                                                                                                                                 
+        |___/
+ArrayAppend(array, newItem) {
+    currentSize = array⇢length
+    Increase array size by one
+    array[currentSize] = newItem
+}
+
+
+FindMax(list, listSize) {
+   if (listSize >= 1) {
+      maximum = list[0]
+      i = 1
+      while (i < listSize) {
+         if (list[i] > maximum) {
+            maximum = list[i]
+         }
+         i = i + 1
+      }
+      return maximum
+   }
+}
+
+
+DisplayTopFiveSalespersons(allSalespersons) {
+   // topSales array has 5 elements
+   // Array elements have subitems for name and total sales
+   // Array will be sorted from highest total sales to lowest total sales
+   Create topSales array with 5 elements
+
+   // Initialize all array elements with a negative sales total
+   for (i = 0; i < topSales⇢length; ++i) {
+      topSales[i]⇢name = ""
+      topSales[i]⇢salesTotal = -1
+   }
+
+   for each salesPerson in allSalespersons {
+      // If salesPerson's total sales is greater than the last
+      // topSales element, salesPerson is one of the top five so far
+      if (salesPerson⇢salesTotal > topSales[topSales⇢length - 1]⇢salesTotal) {
+
+         // Assign the last element in topSales with the current salesperson
+         topSales[topSales⇢length - 1]⇢name =  salesPerson⇢name
+         topSales[topSales⇢length - 1]⇢salesTotal =  salesPerson⇢salesTotal
+
+         // Sort topSales in descending order
+         SortDescending(topSales)
+      }
+   }
+
+   // Display the top five salespersons
+   for (i = 0; i < topSales⇢length; ++i) {
+      Display topSales[i]
+   }
+}
