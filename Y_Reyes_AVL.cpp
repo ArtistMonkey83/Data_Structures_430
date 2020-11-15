@@ -28,7 +28,7 @@ ofstream write("output.txt");		//File our redirected output will be saved to
 */
 void displayExplanation()
 {
- cout << "\n\nThe purpose of this program is to test my ability to implement an AVL Tree. \nI will populate the tree from a text file named input.txt, making sure \nthe tree is balanced. At the end I will display the tree in level format. I will also\noutput the height and balance factor of every node in my output. This will be \nredirected to an output file named output.txt\n";
+ cout << "\n\nThe purpose of this program is to test my ability to implement an AVL Tree. \nI will populate the tree from a text file named input.txt, making sure \nthe tree is balanced. At the end I will display the tree in level format. I will also\noutput the height and balance factor of every node in my output. This will be \nredirected to an output file named output.txt\n\n\n";
 }
 
 void yoliesProgramHeader()
@@ -138,30 +138,21 @@ node * rebalance(node *node){
 */
 BinaryTree *rebalance(BinaryTree *node, int key)
 {
+	node->height = max(height(node->left), height(node->right)) + 1;					//Assign the current node height
 
-	//asign the current node height
-	node->height = max(height(node->left), height(node->right)) + 1;
+	int balance = getBalance(node);																						//Get the balance of the current node
 
-	//get the balance of the current node
-	int balance = getBalance(node);
+	if (balance > 1 && key < node->left->key) { return rightRotate(node); }		//Left Left Case
 
-	// Left Left Case
-	if (balance > 1 && key < node->left->key)
-		return rightRotate(node);
+	if (balance < -1 && key > node->right->key) { return leftRotate(node); }	//Right Right Case
 
-	// Right Right Case
-	if (balance < -1 && key > node->right->key)
-		return leftRotate(node);
-
-	// Left Right Case
-	if (balance > 1 && key > node->left->key)
+	if (balance > 1 && key > node->left->key)																	//Left Right Case
 	{
 		node->left = leftRotate(node->left);
 		return rightRotate(node);
 	}
 
-	// Right Left Case
-	if (balance < -1 && key < node->right->key)
+	if (balance < -1 && key < node->right->key)																//Right Left Case
 	{
 		node->right = rightRotate(node->right);
 		return leftRotate(node);
@@ -190,8 +181,8 @@ node* insert(node* node, int key)
 */
 BinaryTree *avlInsert(BinaryTree *leaf, int data)
 {
-//This if statement only executes if our tree is empty
-	if (!leaf)
+
+	if (!leaf)										//This if statement only executes if our tree is empty
 	{
 		leaf = new BinaryTree;			//Create a new binaryTree structure
 		leaf->right = NULL;					//Setting its left and right pointers to null
@@ -210,57 +201,52 @@ BinaryTree *avlInsert(BinaryTree *leaf, int data)
 
 void printLevel(BinaryTree *root, int level)
 {
+	int bfl = 0,											//Balance Factor for the left child
+			bfr = 0;											//Balance Factor for the right child
 
-	if (root == NULL) return;								//If there is no node at this level return
+	if (root == NULL)									//If we don't have a valid node just return to calling function
+		return;
 
-	if (level == 1)													//We have a valid node, and it's level is 1
+	if (level == 1)										//The base case for this recursive function, level needs to equal 1 for anything to really happen
 	{
-//Print the current node's member variable named key in integer format printf("%d \t\t\t", root->key);
-		int balanceFactor = 0;
-		if (root->left == NULL && root->right == NULL)
-		{
-			cout << root->key << " Leaf Node! ";
-			write << root->key << " Leaf Node! ";
-			break;
-		}
-		cout << root->key << ", ";
-		write << root->key << ", ";										//Send that integer to the ofstream object linked to output.txt
+		if(root->left == NULL) { bfl = -1;}		//Setting up the balance factor for a non existent left child
+		if(root->right == NULL) { bfr = -1;}	//Setting up the balance factor for a non existent right child
+		if(root->height == NULL) { bfr = -1;}	//Setting up the balance factor for a leaf node
 
-    if (root->left != NULL && root->right != NULL)
-		{
-			int balanceFactor = (root->left->height) - (root->right->height);
-
-				if( balanceFactor == 2 || balanceFactor == -2)
-				{
-					cout << " Balance Factor:"<< balanceFactor << ", ";
-					write << " Balance Factor:"<< balanceFactor <<", " ;
-				}
-
-				else
-				{
-					cout << " Balance Factor:"<< balanceFactor << ", ";
-					write << " Balance Factor:"<< balanceFactor <<", " ;
-				}
-		}
-
+		int balanceFactor = bfl - bfr;				//Variable to hold the height
+		cout << root->key << " Height:" << root->height << " Balance Factor:" << balanceFactor <<", "; //Output to the screen
+		write << root->key<< " Height:" << root->height << " Balance Factor:" << balanceFactor <<", "; //Output to the output.txt
 	}
 
-	else if (level > 1)											//We make it here if we have a valid node with level>1
-	{																				//Meaning we are still moving through AVL tree
-		printLevel(root->left, level - 1);		//Print both the left and right children recursively
-		printLevel(root->right, level - 1);		//Till we get to the base case of a node @ level 1
+	else if (level > 1)											//If we get here we have a valid node but it is not the base case, recursive call till we get base case
+	{
+		printLevel(root->left, level - 1);		//Recursive call to traverse down the left child
+		printLevel(root->right, level - 1);		//Recursive call to traverse down the right child
 	}
+
+	/*
+	Segmentation fault while using this code.
+	Explain why: We are running into areas out of bounds when we check the leaf node because there is no child nodes!
+
+	int balanceFactor = root->left->height - root->right->height;
+	cout << root->key << "Height:" << root->height << " Balance Factor:" << balanceFactor <<", ";
+	write << root->key<< "Height:" << root->height << " Balance Factor:" << balanceFactor <<", ";
+	*/
 }
 
+
+/*
+This function prints every node on a particular level then a new line and on to the next printLevel, which is a recursive function
+*/
 void printLevelOrder(BinaryTree *root)
 {
-	int h = height(root);
-	int i;
-	for (i = 1; i <= h; i++)
+	int h = height(root);								//Find the height of the node
+	int i;															//Variable to hold the index of level we are currently at
+	for (i = 1; i <= h; i++)						//For loop to traverse the levels of Binary Tree
 	{
-		printLevel(root, i);
-		cout << "\n";											//If you want... printf("\n"); explain the difference between the two?
-	}																		//I.e format specifiers!
+		printLevel(root, i);							//Recursive call to printLevel with the current node and the index of the level in that Binary tree
+		cout << "\n";											//Newline to seperate the levels in out put printLevel actually prints the output!
+	}
 }
 
 /*
@@ -281,7 +267,7 @@ displayExplanation();
 
 	ifstream read("input.txt");							//Declare a ifstream object to read from input.txt
 
-	while (read.good())											//While we are not at the end of the file
+	while (read.good())											//While we have no errors(the stream is good)
 	{
 		int value;														//Variable to hold the current value from file
 		read >> value;												//Read the current value from file
