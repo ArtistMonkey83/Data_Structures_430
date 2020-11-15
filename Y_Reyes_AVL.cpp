@@ -78,18 +78,15 @@ node *leftRotate(node *x){
 BinaryTree *leftRotate(BinaryTree *x)
 {
 	BinaryTree *y = x->right;
-	BinaryTree *T2 = y->left;
+	BinaryTree *r = y->left;																	//Local structure to hold the the right child pointer while we rotate
 
-	// Perform rotation
-	y->left = x;
-	x->right = T2;
+	y->left = x;																							//Perform the rotation
+	x->right = r;
 
-	// Update heights
-	x->height = max(height(x->left), height(x->right)) + 1;
+	x->height = max(height(x->left), height(x->right)) + 1;		//Update the heights of each
 	y->height = max(height(y->left), height(y->right)) + 1;
 
-	// Return new root
-	return y;
+	return y;																									//Return new root
 }
 
 /*
@@ -102,18 +99,15 @@ node *rightRotate(node *x){
 BinaryTree *rightRotate(BinaryTree *y)
 {
 	BinaryTree *x = y->left;
-	BinaryTree *T2 = x->right;
+	BinaryTree *r = x->right;																	//Local structure to hold the the right child pointer while we rotate
 
-	// Perform rotation
-	x->right = y;
-	y->left = T2;
+	x->right = y;																							//Perform the rotation
+	y->left = r;
 
-	// Update heights
-	y->height = max(height(y->left), height(y->right)) + 1;
+	y->height = max(height(y->left), height(y->right)) + 1;		//Update the heights of each
 	x->height = max(height(x->left), height(x->right)) + 1;
 
-	// Return new root
-	return x;
+	return x;																									//Return new root
 }
 
 /*
