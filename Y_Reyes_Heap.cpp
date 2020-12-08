@@ -26,15 +26,15 @@ public:
 
     void MinHeapify(int );                  //Heapify the heap starting at provided node
 
-    int parent(int i) { return (i-1)/2; }
+    int parent(int i) { return (i-1)/2; }   //Parent index is computed as the floor of (nodeIndex-1)/2
 
-    int left(int i) { return (2*i + 1); }   //Index of left child of node at index i
+    int left(int i) { return (2*i + 1); }   //Left child index is computed as 2*nodeIndex+1
 
-    int right(int i) { return (2*i + 2); }  //Index of right child of node at index i
+    int right(int i) { return (2*i + 2); }  //Right child index is computed as 2*nodeIndex+2
 
     int extractMin();                       //Extract the root (minimum element)
 
-    void decreaseKey(int i, int newVal);   //Decrease key value of key at index i to new_val
+    void decreaseKey(int i, int newVal);    //Decrease key value of key at index i to new_val
 
     int getMin() { return heapArr[0]; }     //Return the key at root (minimum key) from min heap
 
@@ -96,16 +96,16 @@ void MinHeap::insertKey(int k)
 
 /*
 Decreases value of key at index i to newVal, assumming
-newVal is smaller than harr[i].
+newVal is smaller than heapArr[i].
 */
 void MinHeap::decreaseKey(int i, int newVal)
 {
-    heapArr[i] = newVal;
+    heapArr[i] = newVal;                                //The element in heapArr at index i is assigned to the max value of an integer
 
-    while (i != 0 && heapArr[parent(i)] > heapArr[i])
+    while (i != 0 && heapArr[parent(i)] > heapArr[i])   //While we aren't at the first element and while the heapArr at parent index is > heapArr at i index swap!
     {
-        swap(&heapArr[i], &heapArr[parent(i)]);
-        i = parent(i);
+        swap(&heapArr[i], &heapArr[parent(i)]);         //Swap the newVal with the parent index to maintain min-Heap property
+        i = parent(i);                                  //A parent index of a child node can be computed as (nodeIndex-1)/2
     }
 }
 
@@ -120,19 +120,19 @@ int MinHeap::extractMin()
     //If there is only one value in the heap decrement the size and return the only value.
     if (heapSize == 1) { heapSize--; return heapArr[0]; }
 
-    // Store the minimum value, and remove it from heap
-    int root = heapArr[0];             //Assign root to the value at element 0
-    heapArr[0] = heapArr[heapSize-1];  //Assign the value of the last element to the first
-    heapSize--;                        //Decrement the size of the heap
-    MinHeapify(0);                     //Perform the heapify function on the first value in the array, which was the last
+    //Return and remove minimum value in heapArr
+    int root = heapArr[0];             //Assign root to the value at element 0, the smallest value in heapArr
+    heapArr[0] = heapArr[heapSize-1];  //Assign the value of the last element to the first, to check min-heap property after removal
+    heapSize--;                        //Decrement the size of the heap to reflect the removal of minimum value
+    MinHeapify(0);                     //Perform the heapify function on the array using the root node index of 0, which holds the very last(max) value
 
-    return root;                       //Return the inital value at the beggining of the array.
+    return root;                       //Return the initial value at the beggining of the array(smallest value that is now removed)
 }
 
 
 /*
-Deletes a key at index i, first reducing the value to minus
- infinite, then calls extractMin()
+Deletes a key at i, first reducing the value to minus
+infinity, then calls extractMin() to find the min value
 */
 void MinHeap::deleteKey(int i)
 {
@@ -141,32 +141,34 @@ void MinHeap::deleteKey(int i)
 }
 
 /*
- A recursive method to heapify a subtree with the root at given index
-This method assumes that the subtrees are already heapified
+A recursive function to heapify a subtree with the root at index i
+This function assumes that the subtrees are already heapified
 */
 void MinHeap::MinHeapify(int i)
 {
-    int l = left(i),
-        r = right(i),
-        smallest = i;
+    int l = left(i),      //Compute the left child of the node at index i (2*nodeIndex+1)
+        r = right(i),     //Compute the right child of the node at index i (2*nodeIndex+2)
+        smallest = i;     //Variable to hold the smallest of the two values, also used in condition checking to execute a swap
 
-    if (l < heapSize && heapArr[l] < heapArr[i]) { smallest = l; }
-    if (r < heapSize && heapArr[r] < heapArr[smallest]) { smallest = r; }
-    if (smallest != i)
+    if (l < heapSize && heapArr[l] < heapArr[i]) { smallest = l; }            //If the left child is smaller than the parent assign l's index to smallest
+    if (r < heapSize && heapArr[r] < heapArr[smallest]) { smallest = r; }     //If the right child is smaller than the parent assign r's index to the smallest
+
+    if (smallest != i)   //This line executes if smallest is re-assigned in either preceeding if statements, and smallest is a valid element in heapArr
     {
-        swap(&heapArr[i], &heapArr[smallest]);
-        MinHeapify(smallest);
+        swap(&heapArr[i], &heapArr[smallest]);    //Swap the smallest of the two children of a parent node at index i
+        MinHeapify(smallest);                     //Maintain the min-Heap property by checking if we violate it
     }
 }
 
 //Function to swap two elements
 void swap(int *y, int *r)
 {
-    int temp = *y;
-    *y = *r;
-    *r = temp;
+    int temp = *y;        //Local temp integer variable to hold the value y's pointer is pointing to
+    *y = *r;              //Assign the value r's pointer is pointing to, to y's pointer
+    *r = temp;            //We are dereferencing the values of pointers in this function
 }
 
+//Function to print the array
 void printArray(int *a,int n){
     for(int i = 0; i < n; i++) { cout << a[i] << " "; }
 }
@@ -187,40 +189,40 @@ int main()
 yoliesProgramHeader();
 displayExplanation();
 
-    ifstream read("input.txt");
+    ifstream read("input.txt");     //Declaring ifstream object read, to read from the file input.txt
 
-    vector<int> arr;
+    vector<int> populatedArray;     //A vector of integers named populatedArray, will hold what we read from input.txt
 
-    while(read.good()){
+    while(read.good()){             //While we are able to read from the input.txt file
 
-        int temp;
+        int temp;                   //Declare a variable named temp to hold the values read from the file
 
-        read>> temp;
-        arr.push_back(5);
+        read >> temp;                //Read into the temp variable an item from the file
+        populatedArray.push_back(temp);           //Use the push_back function to add the value read from file to our populatedArray
     }
 
-    arr.push_back(2);
-    arr.push_back(3);
+    populatedArray.push_back(2);
+    populatedArray.push_back(3);
 
-    read.close();
+    read.close();                  //Don't forget to close your file after reading from it!
 
-    const int size = arr.size();
+    const int size = populatedArray.size();   //Assign the size variable to the size of the vector we just populated
 
-    MinHeap h(size);
+    MinHeap heapersCreepers(size); //Create heapersCreepers setting the capacity to the value of size
 
-    for (std::vector<int>::iterator it = arr.begin() ; it != arr.end() ;++it) { h.insertKey(*it); }
+    for  (std::vector<int>::iterator it = populatedArray.begin() ; it != populatedArray.end() ;++it) { heapersCreepers.insertKey(*it); }
 
-    printArray(h.heapArr, size);
+    printArray(heapersCreepers.heapArr, size);
 
     int count = 0;
 
-    for (std::vector<int>::iterator it = arr.begin() ; it != arr.end() ;++it){
+    for (std::vector<int>::iterator it = populatedArray.begin() ; it != populatedArray.end() ;++it){
 
-        if(count < 5) { h.deleteKey(*it); }
+        if(count < 5) { heapersCreepers.deleteKey(*it); }
         count++;
     }
 
-    printArray(h.heapArr, size);
+    printArray(heapersCreepers.heapArr, size);
 
 yoliesProgramFooter();
     return 0;
