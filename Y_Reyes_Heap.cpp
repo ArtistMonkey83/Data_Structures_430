@@ -100,8 +100,9 @@ newVal is smaller than heapArr[i].
 */
 void MinHeap::decreaseKey(int i, int newVal)
 {
+    cout <<"We made it inside the decreaseKey function\n";
     heapArr[i] = newVal;                                //The element in heapArr at index i is assigned to the max value of an integer
-
+    cout << "heapArr[i] == "<< heapArr[i] << endl;
     while (i != 0 && heapArr[parent(i)] > heapArr[i])   //While we aren't at the first element and while the heapArr at parent index is > heapArr at i index swap!
     {
         swap(&heapArr[i], &heapArr[parent(i)]);         //Swap the newVal with the parent index to maintain min-Heap property
@@ -186,23 +187,26 @@ void printArray(int *a,int n){
 
 int main()
 {
-yoliesProgramHeader();
-displayExplanation();
+    yoliesProgramHeader();
+    displayExplanation();
 
     ifstream read("input.txt");     //Declaring ifstream object read, to read from the file input.txt
-
+      int temp= INT_MAX;
     vector<int> populatedArray;     //A vector of integers named populatedArray, will hold what we read from input.txt
+      //cout << "we made it here before the while loop\n";
+      //cout << "the state of the eof bt is: "<< read.eof() << endl;
+    while(read>>temp){             //While we are able to read from the input.txt file
 
-    while(read.good()){             //While we are able to read from the input.txt file
+        //int temp;                   //Declare a variable named temp to hold the values read from the file
 
-        int temp;                   //Declare a variable named temp to hold the values read from the file
-
-        read >> temp;                //Read into the temp variable an item from the file
-        populatedArray.push_back(temp);           //Use the push_back function to add the value read from file to our populatedArray
+        //read >> temp;                //Read into the temp variable an item from the file
+        populatedArray.push_back(temp); //Use the push_back function to add the value read from file to our populatedArray
+        //cout << " the value we just pused into the array is: " << populatedArray[temp] <<endl;
     }
+    //cout << "the state of the eof bit  after while loop is: "<< read.eof() << endl;
 
-    populatedArray.push_back(2);
-    populatedArray.push_back(3);
+    //populatedArray.push_back(2);
+    //populatedArray.push_back(3);
 
     read.close();                  //Don't forget to close your file after reading from it!
 
@@ -212,6 +216,7 @@ displayExplanation();
 
     for  (std::vector<int>::iterator it = populatedArray.begin() ; it != populatedArray.end() ;++it) { heapersCreepers.insertKey(*it); }
 
+    cout << "\n\n\t\t\tArray before removing 5 items: ";
     printArray(heapersCreepers.heapArr, size);
 
     int count = 0;
@@ -222,6 +227,7 @@ displayExplanation();
         count++;
     }
 
+    cout << "\n\n\t\t\tArray after removing 5 items: ";
     printArray(heapersCreepers.heapArr, size);
 
 yoliesProgramFooter();
