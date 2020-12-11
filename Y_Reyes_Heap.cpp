@@ -100,13 +100,17 @@ newVal is smaller than heapArr[i].
 */
 void MinHeap::decreaseKey(int i, int newVal)
 {
-    cout <<"We made it inside the decreaseKey function\n";
+    //cout <<"We made it inside the decreaseKey function\n";
     heapArr[i] = newVal;                                //The element in heapArr at index i is assigned to the max value of an integer
-    cout << "heapArr[i] == "<< heapArr[i] << endl;
+    //cout << "heapArr[i] == "<< heapArr[i] << endl;
+    //cout << " i outside == " << i << endl;
     while (i != 0 && heapArr[parent(i)] > heapArr[i])   //While we aren't at the first element and while the heapArr at parent index is > heapArr at i index swap!
     {
+        //cout << " i intside at start == " << i << endl;
         swap(&heapArr[i], &heapArr[parent(i)]);         //Swap the newVal with the parent index to maintain min-Heap property
         i = parent(i);                                  //A parent index of a child node can be computed as (nodeIndex-1)/2
+        //cout << " i intside at end == " << i << endl;
+        heapSize--;
     }
 }
 
@@ -170,8 +174,11 @@ void swap(int *y, int *r)
 }
 
 //Function to print the array
-void printArray(int *a,int n){
-    for(int i = 0; i < n; i++) { cout << a[i] << " "; }
+void printArray(int *a,int n)
+{
+    for(int i = 0; i < n; i++) {
+      if(a[i]!= INT_MIN) { cout << a[i] << " "; }
+    }
 }
 
 
@@ -223,7 +230,7 @@ int main()
 
     for (std::vector<int>::iterator it = populatedArray.begin() ; it != populatedArray.end() ;++it){
 
-        if(count < 5) { heapersCreepers.deleteKey(*it); }
+        if(count < 8) { heapersCreepers.deleteKey(*it); }
         count++;
     }
 
